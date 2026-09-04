@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 7 Quiz — Children's Learning Perspectives & Play</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap');
+
+  :root{
+    --ink:#2B2A4C;
+    --ink-soft:#4C4A72;
+    --paper:#FBF7EF;
+    --paper-deep:#F3ECDD;
+    --butter:#F6C453;
+    --coral:#E8735C;
+    --sage:#7FA084;
+    --sage-deep:#5E8267;
+    --line:#DDD3BE;
+    --white:#ffffff;
+    --danger:#C1503E;
+    --good:#4C7A5A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Nunito Sans', -apple-system, sans-serif;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    color:var(--ink);
+    margin:0;
+  }
+  #app{ max-width:640px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; }
+
+  /* ===== Top bar ===== */
+  .topbar{
+    background:var(--ink);
+    color:var(--paper);
+    padding:20px 20px 16px;
+    border-bottom:5px solid var(--butter);
+  }
+  .topbar .eyebrow{
+    font-size:0.75rem;
+    font-weight:800;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    color:var(--butter);
+    margin-bottom:6px;
+  }
+  .topbar h1{ font-size:1.35rem; color:var(--paper); line-height:1.2; }
+  .topbar .sub{ font-size:0.85rem; color:#C9C5DD; margin-top:6px; }
+
+  .screen{ padding:24px 20px 40px; flex:1; }
+
+  /* ===== Buttons ===== */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:13px 22px;
+    border-radius:10px;
+    border:2px solid var(--ink);
+    background:var(--ink);
+    color:var(--paper);
+    font-weight:700;
+    font-size:0.95rem;
+    font-family:'Nunito Sans', sans-serif;
+    cursor:pointer;
+    transition:transform .1s ease, opacity .15s ease;
+    width:100%;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn:disabled{ opacity:0.4; cursor:not-allowed; }
+  .btn.secondary{
+    background:transparent;
+    color:var(--ink);
+  }
+  .btn.ghost{
+    background:transparent;
+    border-color:transparent;
+    color:var(--ink-soft);
+    font-weight:600;
+    text-decoration:underline;
+    width:auto;
+    padding:8px 4px;
+  }
+  .btn-row{ display:flex; gap:10px; margin-top:20px; }
+  .btn-row .btn{ flex:1; }
+
+  /* ===== Form ===== */
+  label{ font-weight:700; font-size:0.88rem; color:var(--ink-soft); display:block; margin-bottom:6px; }
+  input[type=text], input[type=password]{
+    width:100%;
+    padding:13px 14px;
+    border:2px solid var(--line);
+    border-radius:10px;
+    background:var(--white);
+    font-size:1rem;
+    font-family:'Nunito Sans', sans-serif;
+    color:var(--ink);
+    outline:none;
+  }
+  input[type=text]:focus, input[type=password]:focus{ border-color:var(--coral); }
+
+  .card{
+    background:var(--white);
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:20px;
+    margin-bottom:16px;
+  }
+
+  /* ===== Progress ===== */
+  .progress-wrap{ margin-bottom:20px; }
+  .progress-track{
+    height:8px;
+    background:var(--paper-deep);
+    border-radius:99px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--coral);
+    border-radius:99px;
+    transition:width .25s ease;
+  }
+  .progress-label{
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    margin-top:6px;
+    font-weight:700;
+  }
+
+  /* ===== Question ===== */
+  .q-tag{
+    display:inline-block;
+    font-size:0.72rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--sage-deep);
+    background:#EAF1EA;
+    padding:3px 9px;
+    border-radius:999px;
+    margin-bottom:10px;
+  }
+  .q-text{ font-size:1.12rem; font-weight:700; margin-bottom:16px; line-height:1.4; }
+  .option{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 14px;
+    border:2px solid var(--line);
+    border-radius:10px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition:all .12s ease;
+    background:var(--white);
+  }
+  .option:hover{ border-color:var(--sage); }
+  .option.selected{
+    border-color:var(--coral);
+    background:#FDF1EE;
+  }
+  .option .letter{
+    width:26px; height:26px;
+    border-radius:50%;
+    background:var(--paper-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:0.8rem; color:var(--ink-soft);
+    flex-shrink:0;
+  }
+  .option.selected .letter{ background:var(--coral); color:var(--white); }
+  .option .opt-text{ font-size:0.95rem; }
+
+  .option.correct{ border-color:var(--good); background:#EEF6F0; }
+  .option.correct .letter{ background:var(--good); color:var(--white); }
+  .option.incorrect{ border-color:var(--danger); background:#FBEEEC; }
+  .option.incorrect .letter{ background:var(--danger); color:var(--white); }
+
+  /* ===== Result ===== */
+  .score-hero{
+    text-align:center;
+    padding:32px 20px;
+    background:var(--white);
+    border:2px solid var(--line);
+    border-radius:16px;
+    margin-bottom:20px;
+  }
+  .score-num{
+    font-family:'Fraunces', serif;
+    font-size:3.2rem;
+    font-weight:700;
+    color:var(--coral);
+    line-height:1;
+  }
+  .score-out{ font-size:1.1rem; color:var(--ink-soft); margin-top:4px; }
+  .score-msg{ margin-top:14px; font-size:0.95rem; color:var(--ink-soft); }
+
+  .review-item{
+    padding:14px 0;
+    border-top:1px solid var(--line);
+  }
+  .review-item:first-child{ border-top:none; }
+  .review-q{ font-weight:700; font-size:0.92rem; margin-bottom:6px; }
+  .review-ans{ font-size:0.86rem; color:var(--ink-soft); }
+  .review-ans.wrong{ color:var(--danger); }
+  .review-ans.right{ color:var(--good); }
+
+  /* ===== Admin ===== */
+  table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
+  th, td{ text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); }
+  th{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.03em; color:var(--ink-soft); }
+  .stat-row{ display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-box{
+    flex:1; min-width:100px;
+    background:var(--white); border:2px solid var(--line); border-radius:12px;
+    padding:14px; text-align:center;
+  }
+  .stat-box .num{ font-family:'Fraunces', serif; font-size:1.6rem; color:var(--ink); }
+  .stat-box .lbl{ font-size:0.75rem; color:var(--ink-soft); margin-top:2px; }
+
+  .loading{ text-align:center; padding:40px 0; color:var(--ink-soft); }
+  .error-box{
+    background:#FBEEEC; border:2px solid var(--danger); border-radius:10px;
+    padding:12px 14px; font-size:0.85rem; color:var(--danger); margin-bottom:14px;
+  }
+  .footer-link{ text-align:center; margin-top:24px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ===================== QUIZ DATA =====================
+// 10 questions total. Only the "Definition of Play" questions are sourced
+// from Lesson 2 (Play and Play Environment), as requested. Every other
+// question is sourced from Lesson 1 (Approaches and Theoretical
+// Perspectives to Children's Learning), with theoretical-perspective
+// questions kept to a minimum (2) and the rest spread across ways
+// children learn, strategies to promote learning, and international
+// approaches.
+const QUESTIONS = [
+  {
+    id: 1,
+    topic: "Definition of Play",
+    text: "According to the lesson, play is best described as:",
+    options: [
+      "A structured academic activity imposed by teachers on children",
+      "A voluntary, intrinsically motivated activity through which children explore and make sense of their world",
+      "A rest period scheduled between formal learning sessions",
+      "An activity that is only appropriate outdoors"
+    ],
+    correct: 1
+  },
+  {
+    id: 2,
+    topic: "Definition of Play",
+    text: "Under Article 31 of the UN Convention on the Rights of the Child (CRC), every child has the right to:",
+    options: [
+      "Compulsory formal schooling only",
+      "Unlimited access to digital devices",
+      "Rest, leisure, and play/recreational activities appropriate to their age",
+      "Choose their own curriculum content"
+    ],
+    correct: 2
+  },
+  {
+    id: 3,
+    topic: "Definition of Play",
+    text: "Play in ECCDE settings is broadly classified into two major categories:",
+    options: [
+      "Indoor play and outdoor play",
+      "Child-initiated play and adult-led play",
+      "Free play and paid play",
+      "Morning play and afternoon play"
+    ],
+    correct: 1
+  },
+  {
+    id: 4,
+    topic: "Ways Children Learn",
+    text: "A child who touches something hot, feels pain, and later avoids anything resembling fire is learning primarily through:",
+    options: ["Imitation", "Their sense organs", "Storytelling", "Social interaction"],
+    correct: 1
+  },
+  {
+    id: 5,
+    topic: "Ways Children Learn",
+    text: "Children's language often develops quickly because they copy the speech of adults around them. This illustrates learning through:",
+    options: ["Trial and error", "Imitation", "Exploration and discovery", "Practice and repetition"],
+    correct: 1
+  },
+  {
+    id: 6,
+    topic: "Strategies to Promote Learning",
+    text: "Which of the following is a recommended strategy for early years practitioners to promote children's learning?",
+    options: [
+      "Discourage social interaction to avoid distraction",
+      "Create a stimulating, child-friendly environment",
+      "Withhold praise so children don't become dependent on it",
+      "Keep the daily schedule unpredictable to build resilience"
+    ],
+    correct: 1
+  },
+  {
+    id: 7,
+    topic: "Strategies to Promote Learning",
+    text: "Engaging children in group work, pair tasks, and teamwork is an example of which strategy?",
+    options: [
+      "A theoretical perspective on learning",
+      "An international approach to education",
+      "Encouraging collaborative learning",
+      "A type of play"
+    ],
+    correct: 2
+  },
+  {
+    id: 8,
+    topic: "International Approaches",
+    text: "Which international approach to children's learning focuses on independence, self-directed learning, and hands-on activities?",
+    options: ["Forest School approach", "Finnish education approach", "Montessori approach", "High Scope approach"],
+    correct: 2
+  },
+  {
+    id: 9,
+    topic: "Theoretical Perspectives",
+    text: "Which approach, credited to Friedrich Froebel, saw play as the highest form of learning in children's lives?",
+    options: ["Montessori Approach", "Reggio Emilia Approach", "Kindergarten Approach", "High Scope Approach"],
+    correct: 2
+  },
+  {
+    id: 10,
+    topic: "Theoretical Perspectives",
+    text: "Which theorist's perspective established that play creates a \"zone of proximal development\" where children can perform beyond their current abilities with guidance?",
+    options: ["Jean Piaget", "Friedrich Froebel", "Lev Vygotsky", "Maria Montessori"],
+    correct: 2
+  }
+];
+
+const ADMIN_PASSCODE = "eccde2026";
+
+// ===================== STATE =====================
+let state = {
+  view: "home",       // home | quiz | result | admin-login | admin
+  name: "",
+  current: 0,
+  answers: new Array(QUESTIONS.length).fill(null),
+  submitting: false,
+  adminData: null,
+  adminError: null,
+  adminPass: "",
+};
+
+function setState(patch){
+  state = Object.assign({}, state, patch);
+  render();
+}
+
+function uid(){
+  return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,8);
+}
+
+// ===================== STORAGE HELPERS =====================
+async function saveSubmission(name, score, answers){
+  const key = "submission:" + uid();
+  const value = JSON.stringify({
+    name: name,
+    score: score,
+    total: QUESTIONS.length,
+    answers: answers,
+    timestamp: new Date().toISOString()
+  });
+  await window.storage.set(key, value, true);
+}
+
+async function loadAllSubmissions(){
+  const listResult = await window.storage.list("submission:", true);
+  if(!listResult || !listResult.keys || listResult.keys.length === 0) return [];
+  const results = [];
+  for(const key of listResult.keys){
+    try{
+      const r = await window.storage.get(key, true);
+      if(r && r.value){
+        const parsed = JSON.parse(r.value);
+        results.push(parsed);
+      }
+    }catch(e){
+      // skip unreadable entries
+    }
+  }
+  results.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+  return results;
+}
+
+// ===================== RENDER =====================
+function render(){
+  const app = document.getElementById('app');
+  if(state.view === 'home') app.innerHTML = renderHome();
+  else if(state.view === 'quiz') app.innerHTML = renderQuiz();
+  else if(state.view === 'result') app.innerHTML = renderResult();
+  else if(state.view === 'admin-login') app.innerHTML = renderAdminLogin();
+  else if(state.view === 'admin') app.innerHTML = renderAdmin();
+  attachHandlers();
+}
+
+function renderTopbar(subtitle){
+  return `
+    <div class="topbar">
+      <div class="eyebrow">Unit 7 · Children's Learning Perspectives</div>
+      <h1>Play &amp; Learning Quiz</h1>
+      <div class="sub">${subtitle}</div>
+    </div>`;
+}
+
+function renderHome(){
+  return `
+    ${renderTopbar("10 questions · covers how children learn, play, and are supported to develop")}
+    <div class="screen">
+      <div class="card">
+        <label for="nameInput">Your name</label>
+        <input type="text" id="nameInput" placeholder="e.g. Amaka Johnson" value="${escapeAttr(state.name)}" autocomplete="off">
+      </div>
+      <button class="btn" id="startBtn">Start Quiz</button>
+      <p style="font-size:0.8rem;color:var(--ink-soft);margin-top:14px;">
+        You'll answer 10 multiple-choice questions, one at a time. Your score is saved so your facilitator can see everyone's results.
+      </p>
+      <div class="footer-link">
+        <button class="btn ghost" id="adminLinkBtn">Facilitator / Admin dashboard →</button>
+      </div>
+    </div>`;
+}
+
+function renderQuiz(){
+  const q = QUESTIONS[state.current];
+  const pct = Math.round(((state.current) / QUESTIONS.length) * 100);
+  const selected = state.answers[state.current];
+
+  const optionsHtml = q.options.map((opt, i) => `
+    <div class="option ${selected === i ? 'selected' : ''}" data-idx="${i}">
+      <div class="letter">${String.fromCharCode(65+i)}</div>
+      <div class="opt-text">${escapeHtml(opt)}</div>
+    </div>
+  `).join('');
+
+  const isLast = state.current === QUESTIONS.length - 1;
+
+  return `
+    ${renderTopbar(state.name ? "Good luck, " + escapeHtml(state.name) + "!" : "")}
+    <div class="screen">
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label">Question ${state.current + 1} of ${QUESTIONS.length}</div>
+      </div>
+      <div class="q-tag">${escapeHtml(q.topic)}</div>
+      <div class="q-text">${escapeHtml(q.text)}</div>
+      <div id="optionsWrap">${optionsHtml}</div>
+      <div class="btn-row">
+        ${state.current > 0 ? `<button class="btn secondary" id="prevBtn">Back</button>` : ''}
+        <button class="btn" id="nextBtn" ${selected === null ? 'disabled' : ''}>
+          ${isLast ? (state.submitting ? 'Submitting…' : 'Submit Quiz') : 'Next'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function renderResult(){
+  const score = state.answers.reduce((sum, ans, i) => sum + (ans === QUESTIONS[i].correct ? 1 : 0), 0);
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  let msg;
+  if(pct >= 80) msg = "Excellent work — strong grasp of the material.";
+  else if(pct >= 60) msg = "Good effort — a quick review of a few areas will help.";
+  else msg = "Worth revisiting Lesson 1 and the play section of Lesson 2.";
+
+  const reviewHtml = QUESTIONS.map((q, i) => {
+    const ans = state.answers[i];
+    const correct = ans === q.correct;
+    return `
+      <div class="review-item">
+        <div class="review-q">${i+1}. ${escapeHtml(q.text)}</div>
+        <div class="review-ans ${correct ? 'right' : 'wrong'}">
+          Your answer: ${ans !== null ? escapeHtml(q.options[ans]) : '—'} ${correct ? '✓' : '✗'}
+        </div>
+        ${!correct ? `<div class="review-ans right">Correct answer: ${escapeHtml(q.options[q.correct])}</div>` : ''}
+      </div>`;
+  }).join('');
+
+  return `
+    ${renderTopbar("Results for " + escapeHtml(state.name))}
+    <div class="screen">
+      <div class="score-hero">
+        <div class="score-num">${score}/${QUESTIONS.length}</div>
+        <div class="score-out">${pct}% correct</div>
+        <div class="score-msg">${msg}</div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:10px;">Review your answers</h3>
+        ${reviewHtml}
+      </div>
+      <button class="btn secondary" id="retakeBtn">Take Quiz Again</button>
+    </div>`;
+}
+
+function renderAdminLogin(){
+  return `
+    ${renderTopbar("Facilitator dashboard")}
+    <div class="screen">
+      <div class="card">
+        ${state.adminError ? `<div class="error-box">${escapeHtml(state.adminError)}</div>` : ''}
+        <label for="passInput">Enter passcode</label>
+        <input type="password" id="passInput" placeholder="Passcode" autocomplete="off">
+      </div>
+      <button class="btn" id="adminLoginBtn">View Dashboard</button>
+      <div class="footer-link">
+        <button class="btn ghost" id="backHomeBtn">← Back to quiz</button>
+      </div>
+    </div>`;
+}
+
+function renderAdmin(){
+  if(state.adminData === null){
+    return `
+      ${renderTopbar("Facilitator dashboard")}
+      <div class="screen"><div class="loading">Loading submissions…</div></div>`;
+  }
+  const subs = state.adminData;
+  const count = subs.length;
+  const avg = count > 0 ? (subs.reduce((s,x) => s + x.score, 0) / count).toFixed(1) : "—";
+  const top = count > 0 ? Math.max(...subs.map(x => x.score)) : "—";
+
+  const rows = subs.map(s => {
+    const date = new Date(s.timestamp);
+    const dateStr = date.toLocaleDateString() + " " + date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    return `<tr>
+      <td>${escapeHtml(s.name)}</td>
+      <td>${s.score}/${s.total}</td>
+      <td>${dateStr}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+    ${renderTopbar("Facilitator dashboard — shared with all facilitators")}
+    <div class="screen">
+      <div class="stat-row">
+        <div class="stat-box"><div class="num">${count}</div><div class="lbl">Participants</div></div>
+        <div class="stat-box"><div class="num">${avg}</div><div class="lbl">Average score</div></div>
+        <div class="stat-box"><div class="num">${top}</div><div class="lbl">Top score</div></div>
+      </div>
+      <div class="card" style="padding:0;overflow-x:auto;">
+        ${count === 0
+          ? `<div style="padding:20px;text-align:center;color:var(--ink-soft);">No submissions yet.</div>`
+          : `<table style="min-width:100%;">
+              <thead><tr><th>Name</th><th>Score</th><th>Submitted</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>`
+        }
+      </div>
+      <button class="btn secondary" id="refreshBtn">Refresh</button>
+      <div class="footer-link">
+        <button class="btn ghost" id="backHomeBtn2">← Back to quiz</button>
+      </div>
+    </div>`;
+}
+
+// ===================== HANDLERS =====================
+function attachHandlers(){
+  if(state.view === 'home'){
+    const nameInput = document.getElementById('nameInput');
+    nameInput.oninput = (e) => { state.name = e.target.value; };
+    document.getElementById('startBtn').onclick = () => {
+      const val = nameInput.value.trim();
+      if(!val){ nameInput.focus(); nameInput.style.borderColor = 'var(--danger)'; return; }
+      setState({ name: val, view: 'quiz', current: 0, answers: new Array(QUESTIONS.length).fill(null) });
+    };
+    document.getElementById('adminLinkBtn').onclick = () => setState({ view: 'admin-login', adminError: null });
+  }
+
+  if(state.view === 'quiz'){
+    document.querySelectorAll('.option').forEach(el => {
+      el.onclick = () => {
+        const idx = parseInt(el.dataset.idx, 10);
+        const newAnswers = state.answers.slice();
+        newAnswers[state.current] = idx;
+        setState({ answers: newAnswers });
+      };
+    });
+    const prevBtn = document.getElementById('prevBtn');
+    if(prevBtn) prevBtn.onclick = () => setState({ current: state.current - 1 });
+
+    document.getElementById('nextBtn').onclick = async () => {
+      const isLast = state.current === QUESTIONS.length - 1;
+      if(!isLast){
+        setState({ current: state.current + 1 });
+      } else {
+        setState({ submitting: true });
+        const score = state.answers.reduce((sum, ans, i) => sum + (ans === QUESTIONS[i].correct ? 1 : 0), 0);
+        try{
+          await saveSubmission(state.name, score, state.answers);
+        }catch(e){
+          console.error('Failed to save submission', e);
+        }
+        setState({ view: 'result', submitting: false });
+      }
+    };
+  }
+
+  if(state.view === 'result'){
+    document.getElementById('retakeBtn').onclick = () => {
+      setState({ view: 'quiz', current: 0, answers: new Array(QUESTIONS.length).fill(null) });
+    };
+  }
+
+  if(state.view === 'admin-login'){
+    const passInput = document.getElementById('passInput');
+    passInput.oninput = (e) => { state.adminPass = e.target.value; };
+    passInput.onkeydown = (e) => { if(e.key === 'Enter') doAdminLogin(); };
+    document.getElementById('adminLoginBtn').onclick = doAdminLogin;
+    document.getElementById('backHomeBtn').onclick = () => setState({ view: 'home' });
+  }
+
+  if(state.view === 'admin'){
+    const backBtn = document.getElementById('backHomeBtn2');
+    if(backBtn) backBtn.onclick = () => setState({ view: 'home' });
+    const refreshBtn = document.getElementById('refreshBtn');
+    if(refreshBtn) refreshBtn.onclick = loadAdminData;
+  }
+}
+
+async function doAdminLogin(){
+  if(state.adminPass === ADMIN_PASSCODE){
+    setState({ view: 'admin', adminData: null, adminError: null });
+    loadAdminData();
+  } else {
+    setState({ adminError: 'Incorrect passcode. Please try again.' });
+  }
+}
+
+async function loadAdminData(){
+  try{
+    const subs = await loadAllSubmissions();
+    setState({ adminData: subs });
+  }catch(e){
+    console.error('Failed to load submissions', e);
+    setState({ adminData: [] });
+  }
+}
+
+// ===================== UTIL =====================
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeAttr(s){
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+}
+
+render();
+</script>
+</body>
+</html>
